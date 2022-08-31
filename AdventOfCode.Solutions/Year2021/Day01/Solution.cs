@@ -6,16 +6,16 @@ class Solution : SolutionBase
 
     protected override string SolvePartOne()
     {
-        string[] depthReadings = Input.SplitByNewline();
-        int[] depthMeasurements = new int[depthReadings.Length];
+        string[] depthReadingsText = Input.SplitByNewline();
+        int[] depthMeasurements = new int[depthReadingsText.Length];
             
-        ConvertReadingsToIntMeasurements(depthReadings, depthMeasurements);
+        ConvertReadingsToIntMeasurements(depthReadingsText, depthMeasurements);
 
         int cachedDepth = depthMeasurements[0];
             
         int depthIncreasedCount = 0;
 
-        int iterationsCount = depthReadings.Length;
+        int iterationsCount = depthReadingsText.Length;
             
         for (int i = 1; i < iterationsCount; i++)
         {
@@ -28,10 +28,10 @@ class Solution : SolutionBase
 
     protected override string SolvePartTwo()
     {
-        string[] depthReadings = Input.SplitByNewline();
-        int[] depthMeasurements = new int[depthReadings.Length];
+        string[] depthReadingsText = Input.SplitByNewline();
+        int[] depthMeasurements = new int[depthReadingsText.Length];
             
-        ConvertReadingsToIntMeasurements(depthReadings, depthMeasurements);
+        ConvertReadingsToIntMeasurements(depthReadingsText, depthMeasurements);
 
         int cachedDepthSum =
             new MeasurementWindow(depthMeasurements[0], depthMeasurements[1], depthMeasurements[2])
@@ -39,13 +39,15 @@ class Solution : SolutionBase
             
         int depthIncreasedCount = 0;
             
-        int iterationsCount = depthReadings.Length - depthReadings.Length % 3;
+        int iterationsCount = depthReadingsText.Length - depthReadingsText.Length % 3;
             
         for (int i = 1; i < iterationsCount; i++)
         {
-            int currentDepthSum = 
-                new MeasurementWindow(depthMeasurements[i], depthMeasurements[i + 1], depthMeasurements[i + 2])
-                    .MeasurementSum();
+            var currentMeasurement = new MeasurementWindow(
+                depthMeasurements[i],
+                depthMeasurements[i + 1],
+                depthMeasurements[i + 2]);
+            int currentDepthSum = currentMeasurement.MeasurementSum();
             if (currentDepthSum > cachedDepthSum) depthIncreasedCount++;
             cachedDepthSum = currentDepthSum;
         }
@@ -63,9 +65,9 @@ class Solution : SolutionBase
 
     private class MeasurementWindow
     {
-        private int MeasurementOne {get; set;}
-        private int MeasurementTwo {get; set;}
-        private int MeasurementThree {get; set;}
+        private int MeasurementOne {get; }
+        private int MeasurementTwo {get; }
+        private int MeasurementThree {get; }
         
         public MeasurementWindow(int firstMeasure, int secondMeasure, int thirdMeasure)
         {
